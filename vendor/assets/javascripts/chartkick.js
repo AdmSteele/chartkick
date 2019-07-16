@@ -967,12 +967,6 @@
     if (chartType === "areaspline") {
       chartOptions = {
         plotOptions: {
-          areaspline: {
-            stacking: "normal"
-          },
-          area: {
-            stacking: "normal"
-          },
           series: {
             marker: {
               enabled: false
