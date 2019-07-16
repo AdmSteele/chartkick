@@ -1,42 +1,14 @@
 # Chartkick
 
-Create beautiful JavaScript charts with one line of Ruby. No more fighting with charting libraries!
+Create beautiful Javascript charts with one line of Ruby. No more fighting with charting libraries!
 
-[See it in action](https://chartkick.com)
+[See it in action](http://ankane.github.io/chartkick/)
 
-:fire: For admin charts and dashboards, check out [Blazer](https://github.com/ankane/blazer/)
+Works with Rails, Sinatra and most browsers (including IE 6)
 
-:two_hearts: A perfect companion to [Groupdate](https://github.com/ankane/groupdate), [Hightop](https://github.com/ankane/hightop), and [ActiveMedian](https://github.com/ankane/active_median)
+:two_hearts: A perfect companion to [groupdate](https://github.com/ankane/groupdate), [hightop](https://github.com/ankane/hightop), and [active_median](https://github.com/ankane/active_median)
 
-## Quick Start
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem "chartkick"
-```
-
-For Rails 6 / Webpacker, run:
-
-```sh
-yarn add chartkick chart.js
-```
-
-And in `app/javascript/packs/application.js`, add:
-
-```js
-require("chartkick")
-require("chart.js")
-```
-
-For Rails 5 / Sprockets, in `app/assets/javascripts/application.js`, add:
-
-```js
-//= require chartkick
-//= require Chart.bundle
-```
-
-This sets up Chartkick with Chart.js. For other charting libraries, see [detailed instructions](#installation).
+:speech_balloon: Get [handcrafted updates](http://chartkick.us7.list-manage.com/subscribe?u=952c861f99eb43084e0a49f98&id=6ea6541e8e&group[0][1]=true) for new features
 
 ## Charts
 
@@ -70,19 +42,13 @@ Area chart
 <%= area_chart Visit.group_by_minute(:created_at).maximum(:load_time) %>
 ```
 
-Scatter chart
-
-```erb
-<%= scatter_chart City.pluck(:size, :population) %>
-```
-
-Geo chart - *Google Charts*
+Geo chart
 
 ```erb
 <%= geo_chart Medal.group(:country).count %>
 ```
 
-Timeline - *Google Charts*
+Timeline
 
 ```erb
 <%= timeline [
@@ -95,7 +61,7 @@ Timeline - *Google Charts*
 Multiple series
 
 ```erb
-<%= line_chart @goals.map { |goal|
+<%= line_chart @goals.map{|goal|
     {name: goal.name, data: goal.feats.group_by_week(:created_at).count}
 } %>
 ```
@@ -108,7 +74,7 @@ or
 
 ### Say Goodbye To Timeouts
 
-Make your pages load super fast and stop worrying about timeouts. Give each chart its own endpoint.
+Make your pages load super fast and stop worrying about timeouts.  Give each chart its own endpoint.
 
 ```erb
 <%= line_chart completed_tasks_charts_path %>
@@ -124,6 +90,8 @@ class ChartsController < ApplicationController
 end
 ```
 
+**Note:** This feature requires [jQuery](http://jquery.com/) or [Zepto](http://zeptojs.com/) at the moment.
+
 For multiple series, add `chart_json` at the end.
 
 ```ruby
@@ -132,10 +100,10 @@ render json: Task.group(:goal_id).group_by_day(:completed_at).count.chart_json
 
 ### Options
 
-Id, width, and height
+Id and height
 
 ```erb
-<%= line_chart data, id: "users-chart", width: "800px", height: "500px" %>
+<%= line_chart data, id: "users-chart", height: "500px" %>
 ```
 
 Min and max values
@@ -146,16 +114,10 @@ Min and max values
 
 `min` defaults to 0 for charts with non-negative values. Use `nil` to let the charting library decide.
 
-Min and max for x-axis - *Chart.js*
-
-```erb
-<%= line_chart data, xmin: "2018-01-01", xmax: "2019-01-01" %>
-```
-
 Colors
 
 ```erb
-<%= line_chart data, colors: ["#b00", "#666"] %>
+<%= line_chart data, colors: ["pink", "#999"] %>
 ```
 
 Stacked columns or bars
@@ -170,105 +132,13 @@ Discrete axis
 <%= line_chart data, discrete: true %>
 ```
 
-Label (for single series)
-
-```erb
-<%= line_chart data, label: "Value" %>
-```
-
-Axis titles
-
-```erb
-<%= line_chart data, xtitle: "Time", ytitle: "Population" %>
-```
-
-Straight lines between points instead of a curve
-
-```erb
-<%= line_chart data, curve: false %>
-```
-
-Hide points
-
-```erb
-<%= line_chart data, points: false %>
-```
-
-Show or hide legend
-
-```erb
-<%= line_chart data, legend: false %>
-```
-
-Specify legend position
-
-```erb
-<%= line_chart data, legend: "bottom" %>
-```
-
-Defer chart creation until after the page loads
-
-```erb
-<%= line_chart data, defer: true %>
-```
-
-Donut chart
-
-```erb
-<%= pie_chart data, donut: true %>
-```
-
-Prefix, useful for currency - *Chart.js, Highcharts*
-
-```erb
-<%= line_chart data, prefix: "$" %>
-```
-
-Suffix, useful for percentages - *Chart.js, Highcharts*
-
-```erb
-<%= line_chart data, suffix: "%" %>
-```
-
-Set a thousands separator - *Chart.js, Highcharts*
-
-```erb
-<%= line_chart data, thousands: "," %>
-```
-
-Set a decimal separator - *Chart.js, Highcharts*
-
-```erb
-<%= line_chart data, decimal: "," %>
-```
-
-Show a message when data is empty
-
-```erb
-<%= line_chart data, messages: {empty: "No data"} %>
-```
-
-Refresh data from a remote source every `n` seconds
-
-```erb
-<%= line_chart url, refresh: 60 %>
-```
-
 You can pass options directly to the charting library with:
 
 ```erb
 <%= line_chart data, library: {backgroundColor: "#eee"} %>
 ```
 
-See the documentation for [Chart.js](https://www.chartjs.org/docs/), [Google Charts](https://developers.google.com/chart/interactive/docs/gallery), and [Highcharts](https://api.highcharts.com/highcharts) for more info.
-
-To customize datasets in Chart.js, use:
-
-```erb
-<%= line_chart data, dataset: {borderWidth: 10} %>
-```
-
-You can pass this option to individual series as well.
+See the documentation for [Google Charts](https://developers.google.com/chart/interactive/docs/gallery) and [Highcharts](http://api.highcharts.com/highcharts) for more info.
 
 ### Global Options
 
@@ -277,7 +147,7 @@ To set options for all of your charts, create an initializer `config/initializer
 ```ruby
 Chartkick.options = {
   height: "400px",
-  colors: ["#b00", "#666"]
+  colors: ["pink", "#999"]
 }
 ```
 
@@ -287,25 +157,24 @@ Customize the html
 Chartkick.options[:html] = '<div id="%{id}" style="height: %{height};">Loading...</div>'
 ```
 
-You capture the JavaScript in a content block with:
+You capture the javascript in a content block with:
 
 ```ruby
 Chartkick.options[:content_for] = :charts_js
 ```
 
-Then, in your layout, use:
+Then, in your layout:
 
 ```erb
-<%= yield :charts_js %>
+<%= yield :charts_js %> <%# Rails %>
+<%= yield_content :charts_js %> <%# Padrino %>
 ```
 
-> For Padrino, use `yield_content` instead of `yield`
-
-This is great for including all of your JavaScript at the bottom of the page.
+This is great for including all of your javascript at the bottom of the page.
 
 ### Data
 
-Pass data as a hash or array
+Pass data as a Hash or Array
 
 ```erb
 <%= pie_chart({"Football" => 10, "Basketball" => 5}) %>
@@ -321,63 +190,10 @@ For multiple series, use the format
 ] %>
 ```
 
-Times can be a time or a string (strings are parsed)
+Times can be a time, a timestamp, or a string (strings are parsed)
 
 ```erb
-<%= line_chart({20.day.ago => 5, "2013-05-07 00:00:00 UTC" => 7}) %>
-```
-
-### Multiple Series
-
-You can pass a few options with a series:
-
-- `name`
-- `data`
-- `color`
-- `dataset` - *Chart.js only*
-- `points` - *Chart.js only*
-- `curve` - *Chart.js only*
-
-### Code
-
-If you want to use the charting library directly, get the code with:
-
-```erb
-<%= line_chart data, code: true %>
-```
-
-The code will be logged to the JavaScript console.
-
-> JavaScript functions cannot be logged, so it may not be identical.
-
-### Download Charts
-
-*Chart.js only*
-
-Give users the ability to download charts. It all happens in the browser - no server-side code needed.
-
-```erb
-<%= line_chart data, download: true %>
-```
-
-> Safari will open the image in a new window instead of downloading.
-
-Set the filename
-
-```erb
-<%= line_chart data, download: {filename: "boom"} %>
-```
-
-Set the background color
-
-```erb
-<%= line_chart data, download: {background: "#ffffff"} %>
-```
-
-Set title
-
-```erb
-<%= line_chart data, title: "Awesome chart" %>
+<%= line_chart({20.day.ago => 5, 1368174456 => 4, "2013-05-07 00:00:00 UTC" => 7}) %>
 ```
 
 ## Installation
@@ -388,198 +204,68 @@ Add this line to your application's Gemfile:
 gem "chartkick"
 ```
 
-Next, choose your charting library.
+And add the javascript files to your views.  These files must be included **before** the helper methods, unless using the `:content_for` option.
 
-- [Chart.js](#chart-js)
-- [Google Charts](#google-charts)
-- [Highcharts](#highcharts)
-
-> In the instructions below, `application.js` must be included **before** the charts in your views, unless using the `:content_for` option.
-
-### Chart.js
-
-For Rails 6 / Webpacker, run:
-
-```sh
-yarn add chartkick chart.js
-```
-
-And in `app/javascript/packs/application.js`, add:
-
-```js
-require("chartkick")
-require("chart.js")
-```
-
-For Rails 5 / Sprockets, in `app/assets/javascripts/application.js`, add:
-
-```js
-//= require chartkick
-//= require Chart.bundle
-```
-
-### Google Charts
-
-In your layout or views, add:
+For Google Charts, use:
 
 ```erb
-<%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 ```
 
-For Rails 6 / Webpacker, run:
+If you prefer Highcharts, use:
 
-```sh
-yarn add chartkick
+```erb
+<%= javascript_include_tag "path/to/highcharts.js", "chartkick" %>
 ```
 
-And in `app/javascript/packs/application.js`, add:
+### For Rails 3.1+
 
-```js
-require("chartkick")
-```
+`chartkick.js` runs as a Rails engine - no need to install it.
 
-For Rails 5 / Sprockets, in `app/assets/javascripts/application.js`, add:
+### For Rails 2.3 and 3.0
 
-```js
-//= require chartkick
-```
+You must include `chartkick.js` manually.  [Download it here](https://raw.github.com/ankane/chartkick/master/app/assets/javascripts/chartkick.js)
 
-To specify a language or Google Maps API key, use:
-
-```js
-Chartkick.configure({language: "de", mapsApiKey: "..."})
-```
-
-before your charts.
-
-### Highcharts
-
-For Rails 6 / Webpacker, run:
-
-```sh
-yarn add chartkick highcharts
-```
-
-And in `app/javascript/packs/application.js`, add:
-
-```js
-require("chartkick").use(require("highcharts"))
-```
-
-For Rails 5 / Sprockets, download [highcharts.js](https://code.highcharts.com/highcharts.js) into `vendor/assets/javascripts` (or use `yarn add highcharts` in Rails 5.1+), and in `app/assets/javascripts/application.js`, add:
-
-```js
-//= require chartkick
-//= require highcharts
-```
-
-### Sinatra and Padrino
-
-Download [chartkick.js](https://raw.githubusercontent.com/ankane/chartkick/master/vendor/assets/javascripts/chartkick.js) and include it manually.
+For Rails 2.3, you must use a script tag for Google Charts due to [this bug](https://rails.lighthouseapp.com/projects/8994/tickets/1664-javascript_include_tag-shouldnt-append-a-js-onto-external-urls).
 
 ```html
+<script src="//www.google.com/jsapi"></script>
+```
+
+### For Sinatra
+
+You must include `chartkick.js` manually.  [Download it here](https://raw.github.com/ankane/chartkick/master/app/assets/javascripts/chartkick.js)
+
+```html
+<script src="//www.google.com/jsapi"></script>
 <script src="chartkick.js"></script>
 ```
 
-### Multiple Libraries
+### For Padrino
 
-If more than one charting library is loaded, choose between them with:
+You must include `chartkick.js` manually.  [Download it here](https://raw.github.com/ankane/chartkick/master/app/assets/javascripts/chartkick.js)
+
+In addition, you must specify `http` or `https` if you use Google Charts, since Padrino tries to append `.js` to protocol relative urls.
 
 ```erb
-<%= line_chart data, adapter: "google" %> <!-- or highcharts or chartjs -->
+<%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
 ```
 
-## JavaScript API
+### Localization
 
-Access a chart with:
+To specify a language for Google Charts, add:
 
-```javascript
-var chart = Chartkick.charts["chart-id"]
+```html
+<script>
+  var Chartkick = {"language": "de"};
+</script>
 ```
 
-Get the underlying chart object with:
-
-```javascript
-chart.getChartObject()
-```
-
-You can also use:
-
-```javascript
-chart.getElement()
-chart.getData()
-chart.getOptions()
-chart.getAdapter()
-```
-
-Update the data with:
-
-```javascript
-chart.updateData(newData)
-```
-
-You can also specify new options:
-
-```javascript
-chart.setOptions(newOptions)
-// or
-chart.updateData(newData, newOptions)
-```
-
-Refresh the data from a remote source:
-
-```javascript
-chart.refreshData()
-```
-
-Redraw the chart with:
-
-```javascript
-chart.redraw()
-```
-
-Loop over charts with:
-
-```javascript
-Chartkick.eachChart( function(chart) {
-  // do something
-})
-```
-
-## Content Security Policy (CSP)
-
-Check out [how to configure CSP](https://github.com/ankane/chartkick/blob/master/guides/Content-Security-Policy.md)
+**before** the javascript files.
 
 ## No Ruby? No Problem
 
 Check out [chartkick.js](https://github.com/ankane/chartkick.js)
-
-## Tutorials
-
-- [Charts with Chartkick and Groupdate](https://gorails.com/episodes/charts-with-chartkick-and-groupdate)
-- [Creando gráficos en Ruby on Rails con Chartkick y Chart.js](https://www.youtube.com/watch?v=W92AlkwQn3M)
-- [Make Easy Graphs and Charts on Rails with Chartkick](https://www.sitepoint.com/make-easy-graphs-and-charts-on-rails-with-chartkick/)
-- [Practical Graphs on Rails: Chartkick in Practice](https://www.sitepoint.com/graphs-on-rails-chartkick-in-practice/)
-
-## Upgrading
-
-### 3.0
-
-Breaking changes
-
-- Removed support for Rails < 4.2
-- Removed chartkick.js from asset precompile (no longer needed)
-- Removed `xtype` option - numeric axes are automatically detected
-- Removed `window.Chartkick = {...}` way to set config - use `Chartkick.configure` instead
-- Removed support for the Google Charts jsapi loader - use loader.js instead
-
-### 2.0
-
-Breaking changes
-
-- Chart.js is now the default adapter if multiple are loaded - yay open source!
-- Axis types are automatically detected - no need for `discrete: true`
-- Better date support - dates are no longer treated as UTC
 
 ## Credits
 
@@ -589,7 +275,7 @@ Chartkick uses [iso8601.js](https://github.com/Do/iso8601.js) to parse dates and
 
 View the [changelog](https://github.com/ankane/chartkick/blob/master/CHANGELOG.md)
 
-Chartkick follows [Semantic Versioning](https://semver.org/)
+Chartkick follows [Semantic Versioning](http://semver.org/)
 
 ## Contributing
 

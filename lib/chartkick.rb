@@ -1,15 +1,7 @@
-require "chartkick/helper"
 require "chartkick/version"
-
-# integrations
-require "chartkick/engine" if defined?(Rails)
+require "chartkick/helper"
+require "chartkick/rails" if defined?(Rails)
 require "chartkick/sinatra" if defined?(Sinatra)
-
-if defined?(ActiveSupport.on_load)
-  ActiveSupport.on_load(:action_view) do
-    include Chartkick::Helper
-  end
-end
 
 module Chartkick
   class << self
@@ -23,21 +15,9 @@ end
 # use Enumerable so it can be called on arrays
 module Enumerable
   def chart_json
-    if is_a?(Hash)
-      if (key = keys.first) && key.is_a?(Array) && key.size == 2
-        group_by { |k, _v| k[0] }.map do |name, data|
-          {name: name, data: data.map { |k, v| [k[1], v] }}
-        end
-      else
-        to_a
-      end
-    elsif is_a?(Array)
-      map do |v|
-        if v.is_a?(Hash) && v[:data].is_a?(Hash)
-          v = v.dup
-          v[:data] = v[:data].to_a
-        end
-        v
+    if is_a?(Hash) and (key = keys.first) and key.is_a?(Array) and key.size == 2
+      group_by{|k, v| k[0] }.map do |name, data|
+        {name: name, data: data.map{|k, v| [k[1], v] }}
       end
     else
       self

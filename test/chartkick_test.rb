@@ -1,7 +1,9 @@
-require_relative "test_helper"
+require "test_helper"
 
-class ChartkickTest < Minitest::Test
+class TestChartkick < Minitest::Test
   include Chartkick::Helper
+
+  # TODO actual tests
 
   def setup
     @data = [[34, 42], [56, 49]]
@@ -19,35 +21,4 @@ class ChartkickTest < Minitest::Test
     assert column_chart(@data)
   end
 
-  def test_escape_data
-    bad_data = "</script><script>alert('xss')</script>"
-    assert_includes column_chart(bad_data), "\\u003cscript\\u003e"
-    refute_includes column_chart(bad_data), "<script>"
-  end
-
-  def test_escape_options
-    bad_options = {xss: "</script><script>alert('xss')</script>"}
-    assert_includes column_chart([], bad_options), "\\u003cscript\\u003e"
-    refute_includes column_chart([], bad_options), "<script>"
-  end
-
-  def test_options_not_mutated
-    options = {id: "boom"}
-    line_chart @data, options
-    assert_equal "boom", options[:id]
-  end
-
-  def test_chartkick_deep_merge_different_inner_key
-    global_option = {library: {backgroundColor: "#eee"}}
-    local_option = {library: {title: "test"}}
-    correct_merge = {library: {backgroundColor: "#eee", title: "test"}}
-    assert_equal chartkick_deep_merge(global_option, local_option), correct_merge
-  end
-
-  def test_chartkick_deep_merge_same_inner_key
-    global_option = {library: {backgroundColor: "#eee"}}
-    local_option = {library: {backgroundColor: "#fff"}}
-    correct_merge = {library: {backgroundColor: "#fff"}}
-    assert_equal chartkick_deep_merge(global_option, local_option), correct_merge
-  end
 end
